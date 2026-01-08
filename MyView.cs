@@ -12,6 +12,8 @@ namespace To_Dewey{
     
     
     public partial class MyView {
+        static List<Entry> notes = new List<Entry>();
+        static int index = -1;
         
         public MyView() {
             InitializeComponent();
