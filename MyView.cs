@@ -17,7 +17,8 @@ namespace To_Dewey{
         
         public MyView() {
             InitializeComponent();
-            button1.Clicked += () => MessageBox.Query("Hello", "Hello There!", "Ok");
-        }
+            button1.Accepting += (s, e) => {
+                MessageBox.Query("Hello", "Hello There!", "Ok");
+            };        }
     }
 }
