@@ -18,6 +18,7 @@ namespace To_Dewey {
         
         private Terminal.Gui.Label label1;
         private Terminal.Gui.Button button1;
+        private Terminal.Gui.Bar statusBar;
         
         private void InitializeComponent() {
             this.button1 = new Terminal.Gui.Button();
@@ -47,6 +48,18 @@ namespace To_Dewey {
             this.button1.TextAlignment = Alignment.Center;
             this.button1.IsDefault = false;
             this.Add(this.button1);
+        }
+
+        private void MakeStatusBar(){
+            this.statusBar = new Bar() {
+                X = 0,
+                Y = Pos.AnchorEnd(1),
+                Width = Dim.Fill(),
+                Height = 1
+            };
+
+            statusBar.Add(new Shortcut(Key.N, "_New Note", () => {/*Add reference to function that takes use to a window/popup to add a new note.*/}));
+            this.Add(this.statusBar);
         }
     }
 }

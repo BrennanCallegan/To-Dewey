@@ -17,8 +17,10 @@ namespace To_Dewey{
         
         public MyView() {
             InitializeComponent();
+            MakeStatusBar();
             button1.Accepting += (s, e) => {
                 MessageBox.Query("Hello", "Hello There!", "Ok");
-            };        }
+            };             
+        }
     }
 }
