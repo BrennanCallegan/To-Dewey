@@ -1,7 +1,7 @@
 ﻿using To_Dewey;
 using Terminal.Gui;
 
-Application.Init();
+/*Application.Init();
 
 try
 {
@@ -10,4 +10,15 @@ try
 finally
 {
     Application.Shutdown();
+}*/
+
+public class Program{
+    public static void Main(){
+        Application.Init();
+
+        using var mainWindow = new Home();
+
+        Application.Run(mainWindow);
+        Application.Shutdown();
+    }
 }
