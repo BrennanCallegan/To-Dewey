@@ -2,8 +2,6 @@ namespace To_Dewey {
     using System;
     using Terminal.Gui;
     
-    //MyView.cs and MyViewDesigner are for one window only.
-
     public class Home : Window {
         
         private readonly List<Entry> notes = new ();
