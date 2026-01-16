@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Terminal.Gui;
+using To_Dewey;
 
 public class EntryEditor : Window{
 
@@ -7,20 +9,24 @@ public class EntryEditor : Window{
         Title = "Press Esc to Cancel";
         
         var bodyLabel = new Label {Text = "Body:"};
-        var body = new TextField{
+        var bodyText = new TextField{
             X = Pos.Right(bodyLabel) + 1,
             Width = Dim.Fill()
         };
 
         var addBtn = new Button{
-            Text = "_Add",
+            Text = "Add",
             Y = Pos.Bottom(bodyLabel) + 1,
             X = Pos.Center(),
             IsDefault = true
         };
 
         addBtn.Accepting += (s,e) => {
-
+            Entry note = new Entry();
+            note.body = bodyText.ToString();
+            Home.notes.Add(note);
         };
+
+        Add(bodyLabel, bodyText, addBtn);
     }
 }

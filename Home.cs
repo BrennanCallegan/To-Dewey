@@ -1,10 +1,11 @@
 namespace To_Dewey {
     using System;
+    using System.Collections.Generic;
     using Terminal.Gui;
     
     public class Home : Window {
         
-        private readonly List<Entry> notes = new ();
+        public static List<Entry> notes = new List<Entry>();
         private int index = -1;
 
         private Label label1;
@@ -52,8 +53,8 @@ namespace To_Dewey {
                 Height = 1
             };
 
-            statusBar.Add(new Shortcut(Key.N, "_New Note", () => {/*Add reference to function that takes use to a window/popup to add a new note.*/}));
-            this.Add(this.statusBar);
+            var addNote = new EntryEditor();
+            statusBar.Add(new Shortcut(Key.N, "_New Note", () => {Application.Run(addNote);}));
         }
 
     }
