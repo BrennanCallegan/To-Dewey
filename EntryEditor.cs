@@ -25,6 +25,9 @@ public class EntryEditor : Window{
             Entry note = new Entry();
             note.body = bodyText.ToString();
             Home.notes.Add(note);
+            
+            MessageBox.Query("Success", "Note Added", "Ok");
+            Application.RequestStop();
         };
 
         Add(bodyLabel, bodyText, addBtn);
