@@ -1,12 +1,15 @@
 namespace To_Dewey {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using Terminal.Gui;
     
     public class Home : Window {
         
-        public static List<Entry> notes = new List<Entry>();
+        public static ObservableCollection<Entry> notes = new ObservableCollection<Entry>();
         private int index = -1;
+
+        public static ListView notesList;
 
         private Label label1;
         private Button button1;
@@ -41,8 +44,10 @@ namespace To_Dewey {
                 MessageBox.Query("Hello", "Hello There!", "Ok");
             }; 
 
+            listNotes();
+
             MakeStatusBar();
-            this.Add(button1, label1, statusBar);
+            this.Add(button1, label1, statusBar, notesList);
         }
 
         private void MakeStatusBar(){
@@ -55,6 +60,19 @@ namespace To_Dewey {
 
             var addNote = new EntryEditor();
             statusBar.Add(new Shortcut(Key.N, "_New Note", () => {Application.Run(addNote);}));
+        }
+
+        private void listNotes(){
+            notesList = new ListView{
+                Title = "All Notes",
+                X = 0,
+                Y = Pos.AnchorEnd(6),
+                Width = Dim.Fill (),
+                Height = 5,
+                AllowsMarking = false,
+                SelectedItem = 0,
+                Source = new ListWrapper<Entry>(notes),
+            };
         }
 
     }
