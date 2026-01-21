@@ -23,7 +23,7 @@ public class EntryEditor : Window{
 
         addBtn.Accepting += (s,e) => {
             Entry note = new Entry();
-            note.body = bodyText.ToString();
+            note.body = bodyText.Text.ToString();
             Home.notes.Add(note);
             
             MessageBox.Query("Success", "Note Added", "Ok");
