@@ -72,6 +72,7 @@ namespace To_Dewey {
                 AllowsMarking = false,
                 SelectedItem = 0,
                 Source = new ListWrapper<Entry>(notes),
+                BorderStyle = LineStyle.Rounded,           
             };
         }
 
