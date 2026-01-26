@@ -6,6 +6,8 @@ public class Entry{
 
     public DateTime date = DateTime.Now;
 
+    public int taskTypes {get; set;}
+
     public String body{get; set;}
 
     public override String ToString(){
