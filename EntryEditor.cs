@@ -24,7 +24,7 @@ public class EntryEditor : Window{
         var bodyText = new TextField{
             X = Pos.Right(bodyLabel) + 1,
             Y = Pos.Top(bodyLabel),
-            Width = Dim.Fill()
+            Width = Dim.Fill(40),
         };
 
         var addBtn = new Button{
