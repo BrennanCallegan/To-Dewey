@@ -11,6 +11,10 @@ public class Entry{
     public String body{get; set;}
 
     public override String ToString(){
-        return date + "-" + body;
+        if(taskTypes == 0){return "• " + date + "-" + body;}
+        if(taskTypes == 1){return "○ " + date + "-" + body;}
+        else{return "= " + date + "-" + body;}
+
+        
     }
 }

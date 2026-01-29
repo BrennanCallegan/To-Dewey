@@ -36,6 +36,7 @@ public class EntryEditor : Window{
 
         addBtn.Accepting += (s,e) => {
             Entry note = new Entry();
+            note.taskTypes = taskType.SelectedItem;
             note.body = bodyText.Text.ToString();
             Home.notes.Add(note);
             
