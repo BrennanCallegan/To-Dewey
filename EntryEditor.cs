@@ -14,7 +14,7 @@ public class EntryEditor : Window{
         var taskType = new ComboBox{
             X = Pos.Right(taskLabel) + 1,
             Y = Pos.Top(taskLabel),            
-            Width = Dim.Percent (40),
+            Width = Dim.Percent (42),
             Height = Dim.Fill(3),
             HideDropdownListOnClick = true
         };
@@ -25,14 +25,13 @@ public class EntryEditor : Window{
             X = Pos.Right(bodyLabel) + 1,
             Y = Pos.Top(bodyLabel),
             Width = Dim.Fill(40),
-            Height = Dim.Fill(1),
+            Height = 10,
             WordWrap = true,
         };
-        bodyText.TextFormatter.WordWrap = false;
 
         var addBtn = new Button{
             Text = "Add",
-            Y = Pos.Bottom(bodyLabel) + 1,
+            Y = Pos.Bottom(bodyText) + 1,
             X = Pos.Center(),
             IsDefault = true
         };
