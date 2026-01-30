@@ -14,6 +14,7 @@ namespace To_Dewey {
         private Label label1;
         private Button button1;
         private Bar statusBar;
+        private ScrollBar scrollbar;
         
         public Home() {
             Title = "Press Esc to quit";
@@ -61,18 +62,24 @@ namespace To_Dewey {
             var addNote = new EntryEditor();
             statusBar.Add(new Shortcut(Key.N, "_New Note", () => {Application.Run(addNote);}));
         }
-
+        
         private void listNotes(){
             notesList = new ListView{
                 Title = "All Notes",
                 X = 0,
                 Y = Pos.AnchorEnd(6),
-                Width = Dim.Fill (),
+                Width = Dim.Fill (1),
                 Height = 5,
                 AllowsMarking = false,
                 SelectedItem = 0,
                 Source = new ListWrapper<Entry>(notes),
+                BorderStyle = LineStyle.Rounded,         
             };
+            notesList.VerticalScrollBar.Visible = true;
+            notesList.VerticalScrollBar.AutoShow = true;
+
+            this.Add(notesList);
+
         }
 
     }
