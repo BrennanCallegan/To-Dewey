@@ -21,11 +21,14 @@ public class EntryEditor : Window{
         taskType.SetSource(items);
 
         var bodyLabel = new Label {Text = "Body:", Y = Pos.Bottom(taskLabel) + 3};
-        var bodyText = new TextField{
+        var bodyText = new TextView{
             X = Pos.Right(bodyLabel) + 1,
             Y = Pos.Top(bodyLabel),
             Width = Dim.Fill(40),
+            Height = Dim.Fill(1),
+            WordWrap = true,
         };
+        bodyText.TextFormatter.WordWrap = false;
 
         var addBtn = new Button{
             Text = "Add",
