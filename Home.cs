@@ -7,7 +7,7 @@ namespace To_Dewey {
     public class Home : Window {
         
         public static ObservableCollection<Entry> notes = new ObservableCollection<Entry>();
-        private int index = -1;
+        private List<Entry> filteredNotes = new List<Entry>(); 
 
         public static ListView notesList;
 
@@ -57,13 +57,20 @@ namespace To_Dewey {
                 Height = 14,
                 AllowsMarking = false,
                 SelectedItem = 0,
-                Source = new ListWrapper<Entry>(notes),
+                Source = new ListWrapper<Entry>(new ObservableCollection<Entry>(filteredNotes)),
                 BorderStyle = LineStyle.Rounded,         
             };
             notesList.VerticalScrollBar.Visible = true;
             notesList.VerticalScrollBar.AutoShow = true;
 
             calendar = new DatePicker { Y = Pos.Center (), X = Pos.Center (), BorderStyle = LineStyle.None };
+            var internalField = calendar.Subviews.OfType<DateField>().FirstOrDefault();
+            if (internalField != null) {
+                internalField.DateChanged += (s, e) => {
+                    UpdateFilter();
+                };
+            }
+
             calendarFrame = new ()
             {
                 X = Pos.Right(notesList) + 1,
@@ -76,6 +83,16 @@ namespace To_Dewey {
 
             MakeStatusBar();
             this.Add(button1, label1, statusBar, notesList, calendarFrame);
+        }
+
+        // Make this public so EntryEditor can trigger it
+        public void UpdateFilter() 
+        {
+            // Ensure we are filtering based on the 'Date' property of the picker
+            var selectedDate = calendar.Date;
+            var filtered = notes.Where(n => n.date.Date == selectedDate.Date).ToList();
+            
+            notesList.Source = new ListWrapper<Entry>(new ObservableCollection<Entry>(filtered));
         }
 
         private void MakeStatusBar(){
