@@ -15,12 +15,15 @@ namespace To_Dewey {
         private Button button1;
         private Bar statusBar;
         private ScrollBar scrollbar;
+        private FrameView calendarFrame;
+        private DatePicker calendar;
         
         public Home() {
             Title = "Press Esc to quit";
             Width = Dim.Fill();
             Height = Dim.Fill();
 
+            //--------START OF OLD CONTENT WILL BE REMOVED--------
             button1 = new Button(){
                 Width = 12,
                 X = Pos.Center(),
@@ -44,11 +47,35 @@ namespace To_Dewey {
             button1.Accepting += (s, e) => {
                 MessageBox.Query("Hello", "Hello There!", "Ok");
             }; 
+            //--------END OF OLD CONTENT WILL BE REMOVED--------
 
-            listNotes();
+            notesList = new ListView{
+                Title = "All Notes",
+                X = 0,
+                Y = Pos.AnchorEnd(15),
+                Width = Dim.Fill (33),
+                Height = 14,
+                AllowsMarking = false,
+                SelectedItem = 0,
+                Source = new ListWrapper<Entry>(notes),
+                BorderStyle = LineStyle.Rounded,         
+            };
+            notesList.VerticalScrollBar.Visible = true;
+            notesList.VerticalScrollBar.AutoShow = true;
+
+            calendar = new DatePicker { Y = Pos.Center (), X = Pos.Center (), BorderStyle = LineStyle.None };
+            calendarFrame = new ()
+            {
+                X = Pos.Right(notesList) + 1,
+                Y = Pos.Top(notesList),
+                Width = Dim.Fill(),
+                Height = Dim.Height(notesList),
+                Title = "Calendar"
+            };
+            calendarFrame.Add(calendar);
 
             MakeStatusBar();
-            this.Add(button1, label1, statusBar, notesList);
+            this.Add(button1, label1, statusBar, notesList, calendarFrame);
         }
 
         private void MakeStatusBar(){
@@ -61,25 +88,6 @@ namespace To_Dewey {
 
             var addNote = new EntryEditor();
             statusBar.Add(new Shortcut(Key.N, "_New Note", () => {Application.Run(addNote);}));
-        }
-        
-        private void listNotes(){
-            notesList = new ListView{
-                Title = "All Notes",
-                X = 0,
-                Y = Pos.AnchorEnd(6),
-                Width = Dim.Fill (1),
-                Height = 5,
-                AllowsMarking = false,
-                SelectedItem = 0,
-                Source = new ListWrapper<Entry>(notes),
-                BorderStyle = LineStyle.Rounded,         
-            };
-            notesList.VerticalScrollBar.Visible = true;
-            notesList.VerticalScrollBar.AutoShow = true;
-
-            this.Add(notesList);
-
         }
 
     }
