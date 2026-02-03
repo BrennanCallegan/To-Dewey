@@ -11,9 +11,9 @@ public class Entry{
     public String body{get; set;}
 
     public override String ToString(){
-        if(taskTypes == 0){return "• " + "-" + body;}
-        if(taskTypes == 1){return "○ " + "-" + body;}
-        else{return "= " + "-" + body;}
+        if(taskTypes == 0){return "• " + body;}
+        if(taskTypes == 1){return "○ " + body;}
+        else{return "= " + body;}
 
         
     }
