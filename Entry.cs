@@ -13,7 +13,7 @@ public class Entry{
     public override String ToString(){
         if(taskTypes == 0){return "• " + body;}
         if(taskTypes == 1){return "○ " + body;}
-        else{return "= " + body;}
+        else{return "- " + body;}
 
         
     }

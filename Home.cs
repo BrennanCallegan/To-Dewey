@@ -51,13 +51,14 @@ namespace To_Dewey {
 
             notesList = new ListView{
                 Title = "All Notes",
+                Text = "",
                 X = 0,
                 Y = Pos.AnchorEnd(15),
                 Width = Dim.Fill (33),
                 Height = 14,
                 AllowsMarking = false,
                 SelectedItem = 0,
-                Source = new ListWrapper<Entry>(new ObservableCollection<Entry>(filteredNotes)),
+                Source = new ListWrapper<object>(new ObservableCollection<object>()),
                 BorderStyle = LineStyle.Rounded,         
             };
             notesList.VerticalScrollBar.Visible = true;
@@ -83,16 +84,24 @@ namespace To_Dewey {
 
             MakeStatusBar();
             this.Add(button1, label1, statusBar, notesList, calendarFrame);
+
+            calendar.Date = DateTime.Today;
+            UpdateFilter();
         }
 
-        // Make this public so EntryEditor can trigger it
         public void UpdateFilter() 
         {
             // Ensure we are filtering based on the 'Date' property of the picker
             var selectedDate = calendar.Date;
-            var filtered = notes.Where(n => n.date.Date == selectedDate.Date).ToList();
+            string dateHeader = $"{selectedDate:D}";
             
-            notesList.Source = new ListWrapper<Entry>(new ObservableCollection<Entry>(filtered));
+            var filtered = notes.Where(n => n.date.Date == selectedDate.Date).ToList();
+
+            var displayList = new List<object>();
+            displayList.Add(dateHeader);
+            displayList.AddRange(filtered);
+            
+            notesList.Source = new ListWrapper<object>(new ObservableCollection<object>(displayList));
         }
 
         private void MakeStatusBar(){
@@ -103,8 +112,7 @@ namespace To_Dewey {
                 Height = 1
             };
 
-            var addNote = new EntryEditor();
-            statusBar.Add(new Shortcut(Key.N, "_New Note", () => {Application.Run(addNote);}));
+            statusBar.Add(new Shortcut(Key.N, "_New Note", () => {var addNote = new EntryEditor(this); Application.Run(addNote);}));
         }
 
     }

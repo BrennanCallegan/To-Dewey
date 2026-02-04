@@ -6,7 +6,10 @@ using To_Dewey;
 
 public class EntryEditor : Window{
 
-    public EntryEditor(){
+    private Home homeWindow;
+
+    public EntryEditor(Home parent){
+        homeWindow = parent;
         Title = "Press Esc to Cancel";
 
         var dateLabel = new Label {Text = "Date:"};
@@ -49,7 +52,6 @@ public class EntryEditor : Window{
             note.body = bodyText.Text.ToString();
             Home.notes.Add(note);
             
-            var homeWindow = Application.Top as Home;
             homeWindow?.UpdateFilter();
 
             MessageBox.Query("Success", "Note Added", "Ok");
