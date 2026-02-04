@@ -23,37 +23,11 @@ namespace To_Dewey {
             Width = Dim.Fill();
             Height = Dim.Fill();
 
-            //--------START OF OLD CONTENT WILL BE REMOVED--------
-            button1 = new Button(){
-                Width = 12,
-                X = Pos.Center(),
-                Y = Pos.Center() + 1,
-                Data = "button1", //no function; remove
-                Text = "Click Me",
-                TextAlignment = Alignment.Center,
-                IsDefault = false,
-            };
-
-            label1 = new Terminal.Gui.Label(){
-                Width = 11,
-                Height = 1,
-                X = Pos.Center(),
-                Y = Pos.Center(),
-                Data = "label1", //no function; remove
-                Text = "Hello World",
-                TextAlignment = Alignment.Center,
-            };
-
-            button1.Accepting += (s, e) => {
-                MessageBox.Query("Hello", "Hello There!", "Ok");
-            }; 
-            //--------END OF OLD CONTENT WILL BE REMOVED--------
-
             notesList = new ListView{
                 Title = "All Notes",
                 Text = "",
                 X = 0,
-                Y = Pos.AnchorEnd(15),
+                Y = 0,
                 Width = Dim.Fill (33),
                 Height = 14,
                 AllowsMarking = false,
