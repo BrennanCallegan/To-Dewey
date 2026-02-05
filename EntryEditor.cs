@@ -6,16 +6,25 @@ using To_Dewey;
 
 public class EntryEditor : Window{
 
-    public EntryEditor(){
+    private Home homeWindow;
+
+    public EntryEditor(Home parent){
+        homeWindow = parent;
         Title = "Press Esc to Cancel";
+
+        var dateLabel = new Label {Text = "Date:"};
+        var dateField = new DateField(DateTime.Today){
+            X = Pos.Right(dateLabel) + 1,
+            Y = Pos.Top(dateLabel)
+        };
         
         ObservableCollection<string> items = ["Task", "Event", "Note"];
-        var taskLabel = new Label {Text = "Type:", Y = 0};
+        var taskLabel = new Label {Text = "Type:", Y = Pos.Bottom(dateField) + 1};
         var taskType = new ComboBox{
             X = Pos.Right(taskLabel) + 1,
             Y = Pos.Top(taskLabel),            
             Width = Dim.Percent (42),
-            Height = Dim.Fill(3),
+            Height = 4,
             HideDropdownListOnClick = true
         };
         taskType.SetSource(items);
@@ -38,14 +47,17 @@ public class EntryEditor : Window{
 
         addBtn.Accepting += (s,e) => {
             Entry note = new Entry();
+            note.date = dateField.Date;
             note.taskTypes = taskType.SelectedItem;
             note.body = bodyText.Text.ToString();
             Home.notes.Add(note);
             
+            homeWindow?.UpdateFilter();
+
             MessageBox.Query("Success", "Note Added", "Ok");
             Application.RequestStop();
         };
 
-        Add(taskLabel, taskType, bodyLabel, bodyText, addBtn);
+        Add(dateLabel, dateField, taskLabel, taskType, bodyLabel, bodyText, addBtn);
     }
 }
