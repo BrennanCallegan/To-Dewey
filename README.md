@@ -9,6 +9,7 @@ Dewey is a terminal-based bullet journal that lets you catalog your days and wee
 
 ## Future Updates
 
+- **Journal**: A password protected space to jot down how your're feeling in the moment.
 - **Kanban**: Creating events will give you the option to add a Kanban board to delegate which subtasks are in the works, in progress, or have been completed.
 - **Habit Tracking**: To make sure the healthy ones stick around while the bad ones kick the bucket. 
 ## Tech Stack
