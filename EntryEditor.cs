@@ -9,7 +9,6 @@ public class EntryEditor : Window{
     private Home homeWindow;
 
     public EntryEditor(Entry entry = null, Action onSaved = null){
-        //homeWindow = parent;
         Title = "Press Esc to Cancel";
 
         var dateLabel = new Label {Text = "Date:"};
