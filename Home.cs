@@ -99,8 +99,8 @@ namespace To_Dewey {
                 var selectedNote = notesList.Source.ToList()[selectedIndex] as Entry;
 
                 if(selectedNote != null){
-                    int result = MessageBox.Query("Delete Note", "Do you want to delete this note?", "Yes", "No");
-                    if(result == 0){
+                    int result = MessageBox.Query("Delete Note", "Do you want to delete this note?", "No", "Yes");
+                    if(result == 1){
                         notes.Remove(selectedNote);
                         UpdateFilter();
                     }
