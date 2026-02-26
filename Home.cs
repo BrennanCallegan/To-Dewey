@@ -91,6 +91,23 @@ namespace To_Dewey {
                 }
             }
         }
+
+        private void DeleteSelectedEntry(){
+            int selectedIndex = notesList.SelectedItem;
+
+            if(selectedIndex >= 0){
+                var selectedNote = notesList.Source.ToList()[selectedIndex] as Entry;
+
+                if(selectedNote != null){
+                    int result = MessageBox.Query("Delete Note", "Do you want to delete this note?", "Yes", "No");
+                    if(result == 0){
+                        notes.Remove(selectedNote);
+                        UpdateFilter();
+                    }
+                }
+            }
+            notesList.SetFocus();
+        }
         
         private void MakeStatusBar(){
             statusBar = new Bar() {
@@ -102,6 +119,7 @@ namespace To_Dewey {
 
             statusBar.Add(new Shortcut(Key.N, "_New Note", () => {var addNote = new EntryEditor(null, () => UpdateFilter()); Application.Run(addNote);}));
             statusBar.Add(new Shortcut(Key.E.WithCtrl, "_Edit", () => OpenSelectedEntry()));
+            statusBar.Add(new Shortcut(Key.D.WithCtrl, "_Delete", () => DeleteSelectedEntry()));
 
 
 
