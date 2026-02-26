@@ -8,8 +8,7 @@ public class EntryEditor : Window{
 
     private Home homeWindow;
 
-    public EntryEditor(Home parent){
-        homeWindow = parent;
+    public EntryEditor(Entry entry = null, Action onSaved = null){
         Title = "Press Esc to Cancel";
 
         var dateLabel = new Label {Text = "Date:"};
@@ -45,14 +44,29 @@ public class EntryEditor : Window{
             IsDefault = true
         };
 
+        if(entry != null){
+            dateField.Date = entry.date;
+            taskType.SelectedItem = entry.taskTypes;
+            bodyText.Text = entry.body;
+        }
+
         addBtn.Accepting += (s,e) => {
-            Entry note = new Entry();
-            note.date = dateField.Date;
-            note.taskTypes = taskType.SelectedItem;
-            note.body = bodyText.Text.ToString();
-            Home.notes.Add(note);
+            if(entry == null){
+                Entry note = new Entry();
+                note.date = dateField.Date;
+                note.taskTypes = taskType.SelectedItem;
+                note.body = bodyText.Text.ToString();
             
-            homeWindow?.UpdateFilter();
+                Home.notes.Add(note);
+            }
+
+            else{
+                entry.date = dateField.Date;
+                entry.taskTypes = taskType.SelectedItem;
+                entry.body = bodyText.Text.ToString();
+            }
+            
+            onSaved?.Invoke();
 
             MessageBox.Query("Success", "Note Added", "Ok");
             Application.RequestStop();
