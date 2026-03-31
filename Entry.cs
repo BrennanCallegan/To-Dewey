@@ -4,6 +4,8 @@ using static System.Console;
 
 public class Entry{
 
+    public bool isMonthly {get; set;}
+    
     public DateTime date = DateTime.Now;
 
     public int taskTypes {get; set;}
