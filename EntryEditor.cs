@@ -16,6 +16,12 @@ public class EntryEditor : Window{
             X = Pos.Right(dateLabel) + 1,
             Y = Pos.Top(dateLabel)
         };
+
+        var monthlyLabel = new Label {Text = "Monthly Entry? ", X = Pos.Right(dateField) + 3, Y = Pos.Top(dateField)};
+        var monthlyBox = new CheckBox(){
+            X = Pos.Right(monthlyLabel) + 1,
+            Y = Pos.Top(monthlyLabel),
+        };
         
         ObservableCollection<string> items = ["Task", "Event", "Note"];
         var taskLabel = new Label {Text = "Type:", Y = Pos.Bottom(dateField) + 1};
@@ -72,6 +78,6 @@ public class EntryEditor : Window{
             Application.RequestStop();
         };
 
-        Add(dateLabel, dateField, taskLabel, taskType, bodyLabel, bodyText, addBtn);
+        Add(dateLabel, dateField, monthlyLabel, monthlyBox, taskLabel, taskType, bodyLabel, bodyText, addBtn);
     }
 }
