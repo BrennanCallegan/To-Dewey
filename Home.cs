@@ -9,12 +9,9 @@ namespace To_Dewey {
         public static ObservableCollection<Entry> notes = new ObservableCollection<Entry>();
         private List<Entry> filteredNotes = new List<Entry>(); 
 
-        public static ListView notesList; //DELETE
         public static ListView dailyList;
         public static ListView monthlyList;
 
-        private Label label1;
-        private Button button1;
         private Bar statusBar;
         private ScrollBar scrollbar;
         private FrameView calendarFrame;
@@ -41,7 +38,7 @@ namespace To_Dewey {
             dailyList.OpenSelectedItem += (s, e) => OpenSelectedEntry(dailyList);
             monthlyList.OpenSelectedItem += (s, e) => OpenSelectedEntry(monthlyList);
             
-            var logsView = new TabView(){
+            logsView = new TabView(){
                 Title = "Logs",
                 X = 0,
                 Y = 0,
@@ -52,19 +49,6 @@ namespace To_Dewey {
 
             logsView.AddTab(new Tab { DisplayText = "Daily", View = dailyList }, true);
             logsView.AddTab(new Tab { DisplayText = "Monthly", View = monthlyList }, false);
-
-            /*notesList = new ListView{
-                Title = "All Notes",
-                Text = "",
-                
-                AllowsMarking = false,
-                SelectedItem = 0,
-                Source = new ListWrapper<object>(new ObservableCollection<object>()),         
-            };
-            notesList.VerticalScrollBar.Visible = true;
-            notesList.VerticalScrollBar.AutoShow = true;
-
-            notesList.OpenSelectedItem += (s, e) => OpenSelectedEntry();*/
 
 
             calendar = new DatePicker { Y = Pos.Center (), X = Pos.Center (), BorderStyle = LineStyle.None };
@@ -86,22 +70,24 @@ namespace To_Dewey {
             calendarFrame.Add(calendar);
 
             MakeStatusBar();
-            this.Add(button1, label1, statusBar, logsView, calendarFrame);
+            this.Add(statusBar, logsView, calendarFrame);
 
             calendar.Date = DateTime.Today;
             UpdateFilter();
         }
 
         public void UpdateFilter() 
-        {
+        {   
             // Ensure we are filtering based on the 'Date' property of the picker
             var selectedDate = calendar.Date;
-            string dateHeader = $"{selectedDate:D}";
+            string dailyHeader = $"{selectedDate:D}";
+            string monthlyHeader = $"{selectedDate:MMMM yyyy}";
             
             var dailyData = notes
                 .Where(n => !n.isMonthly && n.date.Date == selectedDate.Date)
                 .Cast<object>()
                 .ToList();
+            dailyData.Insert(0, dailyHeader);
             dailyList.Source = new ListWrapper<object>(new ObservableCollection<object>(dailyData));
 
             var monthlyData = notes
@@ -110,6 +96,7 @@ namespace To_Dewey {
                             n.date.Year == selectedDate.Year)
                 .Cast<object>()
                 .ToList();
+            monthlyData.Insert(0, monthlyHeader);
             monthlyList.Source = new ListWrapper<object>(new ObservableCollection<object>(monthlyData));
         }
 
@@ -136,12 +123,16 @@ namespace To_Dewey {
             }
         }
         private void DeleteSelectedEntry(){
-            int selectedIndex = notesList.SelectedItem;
+            var activeList = logsView.SelectedTab.DisplayText == "Daily" ? dailyList : monthlyList;
+            if (activeList == null) return;
 
-            if(selectedIndex >= 0){
-                var selectedNote = notesList.Source.ToList()[selectedIndex] as Entry;
+            int selectedIndex = activeList.SelectedItem;
+            var sourceList = activeList.Source.ToList();
 
-                if(selectedNote != null){
+            if(selectedIndex >= 0 && selectedIndex < sourceList.Count){
+                var selectedItem = sourceList[selectedIndex];
+
+                if(selectedItem is Entry selectedNote){
                     int result = MessageBox.Query("Delete Note", "Do you want to delete this note?", "No", "Yes");
                     if(result == 1){
                         notes.Remove(selectedNote);
@@ -149,7 +140,7 @@ namespace To_Dewey {
                     }
                 }
             }
-            notesList.SetFocus();
+            logsView.SetFocus();
         }
         
         private void MakeStatusBar(){
