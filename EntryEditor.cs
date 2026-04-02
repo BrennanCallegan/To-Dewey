@@ -21,6 +21,7 @@ public class EntryEditor : Window{
         var monthlyBox = new CheckBox(){
             X = Pos.Right(monthlyLabel) + 1,
             Y = Pos.Top(monthlyLabel),
+            
         };
         
         ObservableCollection<string> items = ["Task", "Event", "Note"];
@@ -50,26 +51,36 @@ public class EntryEditor : Window{
             IsDefault = true
         };
 
+        //Runs when the Edit button is clicked on home screen.
         if(entry != null){
+            monthlyBox.CheckedState = entry.isMonthly ? CheckState.Checked : CheckState.UnChecked;
+
             dateField.Date = entry.date;
             taskType.SelectedItem = entry.taskTypes;
             bodyText.Text = entry.body;
         }
 
+        //Runs when the Add button is clicked in the editor.
         addBtn.Accepting += (s,e) => {
+            bool isMonthlyChecked = monthlyBox.CheckedState == CheckState.Checked;
+            string body = bodyText.Text?.ToString() ?? "";
+
             if(entry == null){
-                Entry note = new Entry();
-                note.date = dateField.Date;
-                note.taskTypes = taskType.SelectedItem;
-                note.body = bodyText.Text.ToString();
+                Entry note = new Entry(){
+                    date = dateField.Date,
+                    isMonthly = isMonthlyChecked,
+                    taskTypes = taskType.SelectedItem,
+                    body = body
+                };
             
                 Home.notes.Add(note);
             }
 
             else{
                 entry.date = dateField.Date;
+                entry.isMonthly = isMonthlyChecked;
                 entry.taskTypes = taskType.SelectedItem;
-                entry.body = bodyText.Text.ToString();
+                entry.body = body;
             }
             
             onSaved?.Invoke();
