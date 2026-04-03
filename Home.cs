@@ -9,36 +9,46 @@ namespace To_Dewey {
         public static ObservableCollection<Entry> notes = new ObservableCollection<Entry>();
         private List<Entry> filteredNotes = new List<Entry>(); 
 
-        public static ListView notesList;
+        public static ListView dailyList;
+        public static ListView monthlyList;
 
-        private Label label1;
-        private Button button1;
         private Bar statusBar;
         private ScrollBar scrollbar;
         private FrameView calendarFrame;
         private DatePicker calendar;
+        private TabView logsView;
         
         public Home() {
             Title = "Press Esc to quit";
             Width = Dim.Fill();
             Height = Dim.Fill();
 
-            notesList = new ListView{
-                Title = "All Notes",
-                Text = "",
+            dailyList = new ListView{
+                Width = Dim.Fill(),
+                Height = Dim.Fill(),
+                Source = new ListWrapper<object>(new ObservableCollection<object>())
+            };
+
+            monthlyList = new ListView{
+                Width = Dim.Fill(),
+                Height = Dim.Fill(),
+                Source = new ListWrapper<object>(new ObservableCollection<object>())
+            };
+
+            dailyList.OpenSelectedItem += (s, e) => OpenSelectedEntry(dailyList);
+            monthlyList.OpenSelectedItem += (s, e) => OpenSelectedEntry(monthlyList);
+            
+            logsView = new TabView(){
+                Title = "Logs",
                 X = 0,
                 Y = 0,
                 Width = Dim.Fill (33),
                 Height = 14,
-                AllowsMarking = false,
-                SelectedItem = 0,
-                Source = new ListWrapper<object>(new ObservableCollection<object>()),
-                BorderStyle = LineStyle.Rounded,         
+                BorderStyle = LineStyle.Rounded,
             };
-            notesList.VerticalScrollBar.Visible = true;
-            notesList.VerticalScrollBar.AutoShow = true;
 
-            notesList.OpenSelectedItem += (s, e) => OpenSelectedEntry();
+            logsView.AddTab(new Tab { DisplayText = "Daily", View = dailyList }, true);
+            logsView.AddTab(new Tab { DisplayText = "Monthly", View = monthlyList }, false);
 
 
             calendar = new DatePicker { Y = Pos.Center (), X = Pos.Center (), BorderStyle = LineStyle.None };
@@ -51,54 +61,78 @@ namespace To_Dewey {
 
             calendarFrame = new ()
             {
-                X = Pos.Right(notesList) + 1,
-                Y = Pos.Top(notesList),
+                X = Pos.Right(logsView) + 1,
+                Y = Pos.Top(logsView),
                 Width = Dim.Fill(),
-                Height = Dim.Height(notesList),
+                Height = Dim.Height(logsView),
                 Title = "Calendar"
             };
             calendarFrame.Add(calendar);
 
             MakeStatusBar();
-            this.Add(button1, label1, statusBar, notesList, calendarFrame);
+            this.Add(statusBar, logsView, calendarFrame);
 
             calendar.Date = DateTime.Today;
             UpdateFilter();
         }
 
         public void UpdateFilter() 
-        {
+        {   
             // Ensure we are filtering based on the 'Date' property of the picker
             var selectedDate = calendar.Date;
-            string dateHeader = $"{selectedDate:D}";
+            string dailyHeader = $"{selectedDate:D}";
+            string monthlyHeader = $"{selectedDate:MMMM yyyy}";
             
-            var filtered = notes.Where(n => n.date.Date == selectedDate.Date).ToList();
+            var dailyData = notes
+                .Where(n => !n.isMonthly && n.date.Date == selectedDate.Date)
+                .Cast<object>()
+                .ToList();
+            dailyData.Insert(0, dailyHeader);
+            dailyList.Source = new ListWrapper<object>(new ObservableCollection<object>(dailyData));
 
-            var displayList = new List<object>();
-            displayList.Add(dateHeader);
-            displayList.AddRange(filtered);
-            
-            notesList.Source = new ListWrapper<object>(new ObservableCollection<object>(displayList));
+            var monthlyData = notes
+                .Where(n => n.isMonthly && 
+                            n.date.Month == selectedDate.Month &&
+                            n.date.Year == selectedDate.Year)
+                .Cast<object>()
+                .ToList();
+            monthlyData.Insert(0, monthlyHeader);
+            monthlyList.Source = new ListWrapper<object>(new ObservableCollection<object>(monthlyData));
         }
 
-        private void OpenSelectedEntry(){
-            if(notesList.SelectedItem >= 0){
-                var selectedNote = notesList.Source.ToList()[notesList.SelectedItem] as Entry;
+        private void OpenSelectedEntry(ListView targetList = null){
+            var activeList = targetList;
 
-                if(selectedNote != null){
+            if(activeList == null){
+                if(logsView?.SelectedTab == null) return;
+                activeList = logsView.SelectedTab.DisplayText == "Daily" ? dailyList : monthlyList;
+            }
+
+            if(activeList?.Source == null) return;
+            
+            var sourceList = activeList.Source.ToList();
+            int index = activeList.SelectedItem;
+
+            if(index >= 0 && index < sourceList.Count){
+                var selectedItem = sourceList[index];
+
+                if(selectedItem is Entry selectedNote){
                     var editWindow = new EntryEditor(selectedNote, () => UpdateFilter());
                     Application.Run(editWindow);
                 }
             }
         }
-
         private void DeleteSelectedEntry(){
-            int selectedIndex = notesList.SelectedItem;
+            var activeList = logsView.SelectedTab.DisplayText == "Daily" ? dailyList : monthlyList;
+            if (activeList == null) return;
 
-            if(selectedIndex >= 0){
-                var selectedNote = notesList.Source.ToList()[selectedIndex] as Entry;
+            int selectedIndex = activeList.SelectedItem;
+            var sourceList = activeList.Source.ToList();
 
-                if(selectedNote != null){
+            if(selectedIndex >= 0 && selectedIndex < sourceList.Count){
+                var selectedItem = sourceList[selectedIndex];
+
+                if(selectedItem is Entry selectedNote){
                     int result = MessageBox.Query("Delete Note", "Do you want to delete this note?", "No", "Yes");
                     if(result == 1){
                         notes.Remove(selectedNote);
@@ -106,7 +140,7 @@ namespace To_Dewey {
                     }
                 }
             }
-            notesList.SetFocus();
+            logsView.SetFocus();
         }
         
         private void MakeStatusBar(){
