@@ -2,6 +2,8 @@ namespace To_Dewey {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Text.Json;
     using Terminal.Gui;
     
     public class Home : Window {
@@ -72,6 +74,7 @@ namespace To_Dewey {
             MakeStatusBar();
             this.Add(statusBar, logsView, calendarFrame);
 
+            LoadNotes();
             calendar.Date = DateTime.Today;
             UpdateFilter();
         }
@@ -98,6 +101,7 @@ namespace To_Dewey {
                 .ToList();
             monthlyData.Insert(0, monthlyHeader);
             monthlyList.Source = new ListWrapper<object>(new ObservableCollection<object>(monthlyData));
+            SaveNotes();
         }
 
         private void OpenSelectedEntry(ListView targetList = null){
@@ -141,6 +145,35 @@ namespace To_Dewey {
                 }
             }
             logsView.SetFocus();
+        }
+
+        private string filePath = "notes.json";
+
+        public void SaveNotes(){
+            try{
+                var options = new JsonSerializerOptions {WriteIndented = true};
+                string jsonString = JsonSerializer.Serialize(notes, options);
+                File.WriteAllText(filePath, jsonString);
+            } catch(Exception ex){
+                MessageBox.ErrorQuery("Save Error", $"Could not save notes: {ex.Message}", "Ok");
+            }
+        }
+
+        public void LoadNotes(){
+            if(File.Exists(filePath)){
+                try{
+                    string jsonString = File.ReadAllText(filePath);
+                    var loadedNotes = JsonSerializer.Deserialize<List<Entry>>(jsonString);
+                    if(loadedNotes != null){
+                        notes.Clear();
+                        foreach(var note in loadedNotes){
+                            notes.Add(note);
+                        }
+                    }
+                } catch(Exception ex){
+                    MessageBox.ErrorQuery("Load Error", $"Could not load notes: {ex.Message}", "Ok");
+                }
+            }
         }
         
         private void MakeStatusBar(){

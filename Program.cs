@@ -8,6 +8,7 @@ public class Program{
         using var mainWindow = new Home();
 
         Application.Run(mainWindow);
+        mainWindow.SaveNotes();
         Application.Shutdown();
     }
 }
