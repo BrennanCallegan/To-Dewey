@@ -85,7 +85,7 @@ public class EntryEditor : Window{
             
             onSaved?.Invoke();
 
-            MessageBox.Query("Success", "Note Added", "Ok");
+            MessageBox.Query("Success", "Note Saved", "Ok");
             Application.RequestStop();
         };
 

@@ -6,7 +6,7 @@ public class Entry{
 
     public bool isMonthly {get; set;}
     
-    public DateTime date = DateTime.Now;
+    public DateTime date {get; set;}
 
     public int taskTypes {get; set;}
 
