@@ -3,7 +3,6 @@
 Dewey is a terminal-based bullet journal that lets you catalog your days and weeks as simply or as intricately as you like.
 ## Features
 
-*Work In Progress*
 - **Daily Log**: Jot down what the day has in store, with different indicators for tasks, events and notes.
 - **Monthly View**: Monthly calendar that lets you jump around and plan ahead.
 
